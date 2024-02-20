@@ -32,8 +32,11 @@ class ProcessFileConversions implements ShouldQueue
 
         $pdfPath = $fromPublic.$this->file;
 
-        shell_exec('magick -density 300 '.$pdfPath.' -compress LZW '.$outputTiffPath.'');
+        $os = strtoupper(substr(PHP_OS, 0, 3));
+        $commandKey = $os === 'WIN' ? 'magick' : 'convert';
 
-        shell_exec('magick "'.$outputTiffPath.'" -format JPG -quality 10 "'.$pdfPath.'"');
+        shell_exec($commandKey.' -density 300 '.$pdfPath.' -compress LZW '.$outputTiffPath.'');
+
+        shell_exec($commandKey.' "'.$outputTiffPath.'" -format JPG -quality 10 "'.$pdfPath.'"');
     }
 }
