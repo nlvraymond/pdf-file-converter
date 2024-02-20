@@ -16,7 +16,7 @@ class ProcessFileConversions implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(private $file, private $isCommand = true)
+    public function __construct()
     {
         //
     }
@@ -26,11 +26,9 @@ class ProcessFileConversions implements ShouldQueue
      */
     public function handle(): void
     {
-        $fromPublic = $this->isCommand ? '' : public_path('storage/images').'/';
+        $outputTiffPath = Str::before(public_path('tattoo.pdf'), '.pdf').'.tiff';
 
-        $outputTiffPath = $fromPublic.Str::before($this->file, '.pdf').'.tiff';
-
-        $pdfPath = $fromPublic.$this->file;
+        $pdfPath = public_path('tattoo.pdf');
 
         $os = strtoupper(substr(PHP_OS, 0, 3));
         $commandKey = $os === 'WIN' ? 'magick' : 'convert';

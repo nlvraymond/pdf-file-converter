@@ -12,7 +12,7 @@ class FileConverterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'convert:convert-file {file}';
+    protected $signature = 'convert:convert-file';
 
     /**
      * The console command description.
@@ -26,6 +26,6 @@ class FileConverterCommand extends Command
      */
     public function handle()
     {
-        ProcessFileConversions::dispatch($this->argument('file'));
+        ProcessFileConversions::dispatch();
     }
 }

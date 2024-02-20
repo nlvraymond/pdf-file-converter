@@ -18,6 +18,6 @@ class FileConverterController extends Controller
     {
         Storage::disk('public')->put('images/'.$request->file('file')->getClientOriginalName(), file_get_contents($request->file('file')));
 
-        ProcessFileConversions::dispatch($request->file('file')->getClientOriginalName(), false);
+        // ProcessFileConversions::dispatch($request->file('file')->getClientOriginalName(), false);
     }
 }
