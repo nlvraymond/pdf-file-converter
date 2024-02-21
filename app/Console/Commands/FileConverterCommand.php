@@ -26,6 +26,10 @@ class FileConverterCommand extends Command
      */
     public function handle()
     {
+        dump('Converting');
         ProcessFileConversions::dispatch();
+
+        sleep(8);
+        dump('Converted Successfully!');
     }
 }
