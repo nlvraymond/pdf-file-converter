@@ -30,6 +30,6 @@ class FileConverterCommand extends Command
         ProcessFileConversions::dispatch();
 
         sleep(8);
-        dump('Converted Successfully!');
+        dump('File Converted Successfully!');
     }
 }
