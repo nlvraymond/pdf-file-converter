@@ -16,7 +16,7 @@ class ProcessFileConversions implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(private $filename = null)
     {
         //
     }
@@ -26,9 +26,11 @@ class ProcessFileConversions implements ShouldQueue
      */
     public function handle(): void
     {
-        $outputTiffPath = Str::before(public_path('tattoo.pdf'), '.pdf').'.tiff';
+        $outputTiffPath = Str::before((public_path(is_null($this->filename) ? 'tattoo.pdf' : 'storage/images/'.$this->filename)), '.pdf').'.tiff';
 
-        $pdfPath = public_path('tattoo.pdf');
+        $pdfPath = public_path(is_null($this->filename) ? 'tattoo.pdf' : 'storage/images/'.$this->filename);
+
+        $jpgPath = public_path('storage/images/').Str::before($this->filename, '.pdf').'.jpg';
 
         $os = strtoupper(substr(PHP_OS, 0, 3));
         $commandKey = $os === 'WIN' ? 'magick' : 'convert';
@@ -36,5 +38,7 @@ class ProcessFileConversions implements ShouldQueue
         shell_exec($commandKey.' -density 300 '.$pdfPath.' -compress LZW '.$outputTiffPath.'');
 
         shell_exec($commandKey.' "'.$outputTiffPath.'" -format JPG -quality 10 "'.$pdfPath.'"');
+
+        shell_exec($commandKey.' '.$outputTiffPath.' '.$jpgPath);
     }
 }

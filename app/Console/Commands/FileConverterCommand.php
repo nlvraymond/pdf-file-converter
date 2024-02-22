@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Jobs\ProcessFileConversions;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FileConverterCommand extends Command
 {
@@ -12,7 +14,7 @@ class FileConverterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'convert:convert-file';
+    protected $signature = 'convert:convert-file {file?}';
 
     /**
      * The console command description.
@@ -26,6 +28,10 @@ class FileConverterCommand extends Command
      */
     public function handle()
     {
-        ProcessFileConversions::dispatch();
+        if (Str::contains(basename($this->argument('file')), 'pdf')) {
+            Storage::disk('public')->put('images/'.basename($this->argument('file')), file_get_contents($this->argument('file')));
+
+            ProcessFileConversions::dispatch(basename($this->argument('file')));
+        }
     }
 }
