@@ -28,6 +28,11 @@ class FileConverterCommand extends Command
      */
     public function handle()
     {
+
+        if (is_null($this->argument('file'))) {
+            ProcessFileConversions::dispatch();
+        }
+
         if (Str::contains(basename($this->argument('file')), 'pdf')) {
             Storage::disk('public')->put('images/'.basename($this->argument('file')), file_get_contents($this->argument('file')));
 
