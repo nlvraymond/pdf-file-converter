@@ -30,7 +30,12 @@ class FileConverterCommand extends Command
     {
 
         if (is_null($this->argument('file'))) {
-            ProcessFileConversions::dispatch();
+
+            for ($index = 0; $index < 50; $index++) {
+                sleep(4);
+                logger($index);
+                ProcessFileConversions::dispatch();
+            }
         }
 
         if (Str::contains(basename($this->argument('file')), 'pdf')) {
