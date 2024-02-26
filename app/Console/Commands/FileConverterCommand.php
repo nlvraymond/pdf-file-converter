@@ -33,7 +33,6 @@ class FileConverterCommand extends Command
 
             for ($index = 0; $index < 50; $index++) {
                 sleep(4);
-                logger($index);
                 ProcessFileConversions::dispatch();
             }
         }

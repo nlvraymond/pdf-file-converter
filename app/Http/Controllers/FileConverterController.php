@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Jobs\ProcessFileConversions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class FileConverterController extends Controller
@@ -19,13 +18,14 @@ class FileConverterController extends Controller
     {
         Storage::disk('public')->put('images/'.$request->file('file')->getClientOriginalName(), file_get_contents($request->file('file')));
 
-        ProcessFileConversions::dispatch($request->file('file')->getClientOriginalName());
+        $tiffFile = now()->secondsSinceMidnight();
+        ProcessFileConversions::dispatch($request->file('file')->getClientOriginalName(), $tiffFile);
 
-        sleep(7);
+        sleep(5);
 
         return Inertia::render('FileConverter', [
             'pdf' => $request->file('file')->getClientOriginalName(),
-            'jpg' => Str::before($request->file('file')->getClientOriginalName(), '.pdf').'.jpg',
+            'tiff' => $tiffFile,
         ]);
     }
 }
