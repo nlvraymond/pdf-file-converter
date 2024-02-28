@@ -40,6 +40,8 @@ class FileConverterCommand extends Command
             Storage::disk('public')->put('images/'.basename($this->argument('file')), file_get_contents($this->argument('file')));
 
             ProcessFileConversions::dispatch(basename($this->argument('file')));
+        } else {
+            dump('File is not pdf');
         }
     }
 }
