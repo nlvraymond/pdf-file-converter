@@ -41,7 +41,7 @@ class FileConverterCommand extends Command
 
             ProcessFileConversions::dispatch(basename($this->argument('file')));
         } else {
-            if (is_null($this->argument('file'))) {
+            if (! is_null($this->argument('file'))) {
                 dump('File is not pdf');
             }
         }
