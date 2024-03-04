@@ -28,12 +28,14 @@ class ProcessFileConversions implements ShouldQueue
     {
         $outputTiffPath = public_path('storage/images/'.Str::random(10)).'.tiff';
 
-        $pdfPath = is_null($this->filename) ? Str::before($outputTiffPath, 'tiff').'pdf' : public_path('storage/images/'.$this->filename);
+        $pdfPath = Str::before($outputTiffPath, 'tiff').'pdf';
+
+        $fileParameter = ! is_null($this->filename) ? public_path('storage/images/'.$this->filename) : public_path('tattoo.pdf');
 
         $os = strtoupper(substr(PHP_OS, 0, 3));
         $commandKey = $os === 'WIN' ? 'magick' : 'convert';
 
-        shell_exec($commandKey.' -density 300 '.public_path('tattoo.pdf').' -compress LZW '.$outputTiffPath.'');
+        shell_exec($commandKey.' -density 300 '.$fileParameter.' -compress LZW '.$outputTiffPath.'');
 
         shell_exec($commandKey.' "'.$outputTiffPath.'" -format JPG -quality 10 "'.$pdfPath.'"');
     }

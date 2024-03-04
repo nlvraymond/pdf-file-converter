@@ -14,7 +14,7 @@ class FileConverterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'convert:convert-file {file?}';
+    protected $signature = 'convert:convert-file {file?} {count?}';
 
     /**
      * The console command description.
@@ -39,7 +39,11 @@ class FileConverterCommand extends Command
         if (Str::contains(basename($this->argument('file')), 'pdf')) {
             Storage::disk('public')->put('images/'.basename($this->argument('file')), file_get_contents($this->argument('file')));
 
-            ProcessFileConversions::dispatch(basename($this->argument('file')));
+            $range = $this->argument('count') ?? 1;
+            for ($index = 0; $index < $range; $index++) {
+                ProcessFileConversions::dispatch(basename($this->argument('file')));
+            }
+
         } else {
             if (! is_null($this->argument('file'))) {
                 dump('File is not pdf');
