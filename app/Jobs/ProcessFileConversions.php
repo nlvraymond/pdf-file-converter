@@ -52,15 +52,13 @@ class ProcessFileConversions implements ShouldQueue
         $os = strtoupper(substr(PHP_OS, 0, 3));
         $commandKey = $os === 'WIN' ? 'magick' : 'convert';
 
-        $startMemory = memory_get_usage(true);
-
         shell_exec($commandKey.' -density 300 '.$fileParameter.' -compress LZW '.$outputTiffPath.'');
 
         shell_exec($commandKey.' "'.$outputTiffPath.'" -format JPG -quality 10 "'.$pdfPath.'"');
 
-        $cpuUsage = $os === 'WIN' ? shell_exec('powershell "(Get-WmiObject Win32_PerfFormattedData_PerfOS_Processor | Measure-Object -Property PercentProcessorTime -Average).Average"') : sys_getloadavg()[0];
+        $cpuUsage = shell_exec('powershell "(Get-WmiObject Win32_PerfFormattedData_PerfOS_Processor | Measure-Object -Property PercentProcessorTime -Average).Average"');
 
-        $memoryUsage = $os === 'WIN' ? shell_exec('powershell "(Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty FreePhysicalMemory) / (Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty TotalVisibleMemorySize) * 100"') : memory_get_usage(true) - $startMemory;
+        $memoryUsage = shell_exec('powershell "(Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty FreePhysicalMemory) / (Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty TotalVisibleMemorySize) * 100"');
 
         dump("CPU Usage: $cpuUsage%");
         dump("Memory Usage: $memoryUsage%");
