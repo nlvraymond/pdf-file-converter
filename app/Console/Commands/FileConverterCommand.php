@@ -34,19 +34,16 @@ class FileConverterCommand extends Command
             for ($index = 0; $index < 10; $index++) {
                 ProcessFileConversions::dispatch();
             }
-        }
+        } else {
+            if (! Str::before(basename($this->argument('file')), 'pdf')) {
+                dump('File is not pdf');
+            }
 
-        if (Str::contains(basename($this->argument('file')), 'pdf')) {
             Storage::disk('public')->put('images/'.basename($this->argument('file')), file_get_contents($this->argument('file')));
 
             $range = $this->argument('count') ?? 1;
             for ($index = 0; $index < $range; $index++) {
                 ProcessFileConversions::dispatch(basename($this->argument('file')));
-            }
-
-        } else {
-            if (! is_null($this->argument('file'))) {
-                dump('File is not pdf');
             }
         }
     }

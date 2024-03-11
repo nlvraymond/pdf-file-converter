@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\UploadedFile;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,7 +17,7 @@ class ProcessFileConversions implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(private $filename = null)
+    public function __construct(private $filename = null, private $fromUI = false)
     {
         //
     }
@@ -26,7 +27,23 @@ class ProcessFileConversions implements ShouldQueue
      */
     public function handle(): void
     {
-        $outputTiffPath = public_path('storage/images/'.Str::random(10)).'.tiff';
+        $randomName = Str::random(10);
+
+        if ($this->fromUI) {
+            UploadedFile::create([
+                'filename' => $randomName.'.tiff',
+                'is_downloaded' => false,
+                'original_file' => $this->filename,
+            ]);
+
+            UploadedFile::create([
+                'filename' => $randomName.'.pdf',
+                'is_downloaded' => false,
+                'original_file' => $this->filename,
+            ]);
+        }
+
+        $outputTiffPath = public_path('storage/images/'.$randomName).'.tiff';
 
         $pdfPath = Str::before($outputTiffPath, 'tiff').'pdf';
 
@@ -38,5 +55,12 @@ class ProcessFileConversions implements ShouldQueue
         shell_exec($commandKey.' -density 300 '.$fileParameter.' -compress LZW '.$outputTiffPath.'');
 
         shell_exec($commandKey.' "'.$outputTiffPath.'" -format JPG -quality 10 "'.$pdfPath.'"');
+
+        $cpuUsage = $os === 'WIN' ? shell_exec('powershell "(Get-WmiObject Win32_PerfFormattedData_PerfOS_Processor | Measure-Object -Property PercentProcessorTime -Average).Average"') : sys_getloadavg()[0];
+
+        $memoryUsage = $os === 'WIN' ? shell_exec('powershell "(Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty FreePhysicalMemory) / (Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty TotalVisibleMemorySize) * 100"') : memory_get_usage(true);
+
+        dump("CPU Usage: $cpuUsage%");
+        dump("Memory Usage: $memoryUsage%");
     }
 }
