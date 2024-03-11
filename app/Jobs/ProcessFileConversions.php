@@ -60,7 +60,7 @@ class ProcessFileConversions implements ShouldQueue
 
         $memoryUsage = $os === 'WIN' ? shell_exec('powershell "(Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty FreePhysicalMemory) / (Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty TotalVisibleMemorySize) * 100"') : shell_exec('ps -p '.getmypid().' -o %mem | tail -n 1');
 
-        dump("CPU Usage: $cpuUsage%");
-        dump("Memory Usage: $memoryUsage%");
+        dump('CPU Usage: '.(number_format((float) $cpuUsage, 2, '.', '')).'%');
+        dump('Memory Usage: '.(number_format((float) $memoryUsage, 2, '.', '')).'%');
     }
 }
