@@ -55,12 +55,5 @@ class ProcessFileConversions implements ShouldQueue
         shell_exec($commandKey.' -density 300 '.$fileParameter.' -compress LZW '.$outputTiffPath.'');
 
         shell_exec($commandKey.' "'.$outputTiffPath.'" -format JPG -quality 10 "'.$pdfPath.'"');
-
-        $cpuUsage = $os === 'WIN' ? shell_exec('powershell "(Get-WmiObject Win32_PerfFormattedData_PerfOS_Processor | Measure-Object -Property PercentProcessorTime -Average).Average"') : shell_exec('ps -p '.getmypid().' -o %cpu | tail -n 1');
-
-        $memoryUsage = $os === 'WIN' ? shell_exec('powershell "(Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty FreePhysicalMemory) / (Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty TotalVisibleMemorySize) * 100"') : shell_exec('ps -p '.getmypid().' -o %mem | tail -n 1');
-
-        dump('CPU Usage: '.(number_format((float) $cpuUsage, 2, '.', '')).'%');
-        dump('Memory Usage: '.(number_format((float) $memoryUsage, 2, '.', '')).'%');
     }
 }
