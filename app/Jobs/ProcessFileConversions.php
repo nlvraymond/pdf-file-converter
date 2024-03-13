@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\UploadedFile;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -28,20 +27,6 @@ class ProcessFileConversions implements ShouldQueue
     public function handle(): void
     {
         $randomName = Str::random(10);
-
-        if ($this->fromUI) {
-            UploadedFile::create([
-                'filename' => $randomName.'.tiff',
-                'is_downloaded' => false,
-                'original_file' => $this->filename,
-            ]);
-
-            UploadedFile::create([
-                'filename' => $randomName.'.pdf',
-                'is_downloaded' => false,
-                'original_file' => $this->filename,
-            ]);
-        }
 
         $outputTiffPath = public_path('storage/images/'.$randomName).'.tiff';
 
