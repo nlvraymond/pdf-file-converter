@@ -31,7 +31,7 @@ class FileConverterCommand extends Command
 
         if (is_null($this->argument('file'))) {
 
-            for ($index = 0; $index < 10; $index++) {
+            for ($index = 0; $index < 50; $index++) {
                 ProcessFileConversions::dispatch();
             }
         } else {
