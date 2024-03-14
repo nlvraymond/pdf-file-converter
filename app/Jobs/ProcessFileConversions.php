@@ -26,9 +26,7 @@ class ProcessFileConversions implements ShouldQueue
      */
     public function handle(): void
     {
-        $randomName = Str::random(10);
-
-        $outputTiffPath = public_path('storage/images/'.$randomName).'.tiff';
+        $outputTiffPath = public_path('storage/images/'.Str::random(10)).'.tiff';
 
         $pdfPath = Str::before($outputTiffPath, 'tiff').'pdf';
 
