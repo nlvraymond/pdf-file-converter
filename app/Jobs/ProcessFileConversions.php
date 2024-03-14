@@ -21,7 +21,7 @@ class ProcessFileConversions implements ShouldQueue
         //
     }
 
-    public $timeout = 120;
+    public $timeout = 240;
 
     /**
      * Execute the job.
